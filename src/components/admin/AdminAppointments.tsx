@@ -22,7 +22,7 @@ const AdminAppointments: React.FC = () => {
     try {
       setLoading(true);
       const data = await fetchAppointments();
-      setAppointments(data as Appointment[] || []);
+      setAppointments(data || []);
     } catch (error) {
       console.error('Error fetching appointments:', error);
       toast({

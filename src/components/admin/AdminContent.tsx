@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from "@/hooks/use-toast";
 import { FileText } from 'lucide-react';
@@ -40,7 +39,7 @@ const AdminContent: React.FC = () => {
     try {
       setLoading(true);
       const data = await fetchContent();
-      setContent(data as ContentItem[] || []);
+      setContent(data || []);
     } catch (error) {
       console.error('Error fetching content:', error);
       toast({

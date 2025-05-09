@@ -67,27 +67,27 @@ export const submitAppointment = async (appointment: Appointment): Promise<{ suc
 };
 
 // Functions to fetch data from Supabase tables directly
-export const fetchMessages = async () => {
+export const fetchMessages = async (): Promise<Message[]> => {
   const { data, error } = await supabase
     .from('messages')
     .select('*')
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data;
+  return data as Message[];
 };
 
-export const fetchAppointments = async () => {
+export const fetchAppointments = async (): Promise<Appointment[]> => {
   const { data, error } = await supabase
     .from('appointments')
     .select('*')
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data;
+  return data as Appointment[];
 };
 
-export const updateAppointmentStatus = async (id: string, status: 'confirmed' | 'cancelled') => {
+export const updateAppointmentStatus = async (id: string, status: 'confirmed' | 'cancelled'): Promise<boolean> => {
   const { error } = await supabase
     .from('appointments')
     .update({ status })
@@ -97,17 +97,17 @@ export const updateAppointmentStatus = async (id: string, status: 'confirmed' | 
   return true;
 };
 
-export const fetchContent = async () => {
+export const fetchContent = async (): Promise<ContentItem[]> => {
   const { data, error } = await supabase
     .from('content')
     .select('*')
     .order('section, key');
   
   if (error) throw error;
-  return data;
+  return data as ContentItem[];
 };
 
-export const updateContent = async (item: ContentItem) => {
+export const updateContent = async (item: ContentItem): Promise<boolean> => {
   const { error } = await supabase
     .from('content')
     .update({ value: item.value })
@@ -117,7 +117,7 @@ export const updateContent = async (item: ContentItem) => {
   return true;
 };
 
-export const insertContent = async (items: Omit<ContentItem, 'id' | 'updated_at'>[]) => {
+export const insertContent = async (items: Omit<ContentItem, 'id' | 'updated_at'>[]): Promise<boolean> => {
   const { error } = await supabase
     .from('content')
     .insert(items);
