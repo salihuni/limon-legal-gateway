@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
               {t('common.firm_name')}
             </h3>
             <p className="mb-6 text-gray-300">
-              {t('home.intro_text').replace('2005', '2023').substring(0, 100)}...
+              {t('home.intro_text').replace('2023', '2023').replace('vermekteyiz', 'vermektedir').substring(0, 100)}...
             </p>
           </div>
           
