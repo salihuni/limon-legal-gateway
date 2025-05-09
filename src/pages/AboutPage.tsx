@@ -93,7 +93,7 @@ const AboutPage: React.FC = () => {
               </p>
               <div className="flex flex-wrap gap-8 mt-8">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-limon-gold mb-2">2005</div>
+                  <div className="text-4xl font-bold text-limon-gold mb-2">2023</div>
                   <p className="text-sm text-gray-500">Founded</p>
                 </div>
                 <div className="text-center">
@@ -103,10 +103,6 @@ const AboutPage: React.FC = () => {
                 <div className="text-center">
                   <div className="text-4xl font-bold text-limon-gold mb-2">1000+</div>
                   <p className="text-sm text-gray-500">Successful Cases</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-limon-gold mb-2">15+</div>
-                  <p className="text-sm text-gray-500">Countries</p>
                 </div>
               </div>
             </div>
