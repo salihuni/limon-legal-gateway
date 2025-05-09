@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { toast } from "../hooks/use-toast";
@@ -135,7 +136,7 @@ const ContactPage: React.FC = () => {
               {/* Google Map */}
               <div className="mt-10 rounded-2xl overflow-hidden shadow-md h-[300px]">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3008.25494434628!2d28.99408327582669!3d41.066763372385455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab6fe1fe3de7f%3A0x612cfa10466a6c7c!2zTWVjaWRpeWVrw7Z5LCBCw7x5w7xrZGVyZSBDZC4sIDM0Mzg3IMWeacWfbGkvxLBzdGFuYnVs!5e0!3m2!1sen!2str!4v1715182986358!5m2!1sen!2str"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.214727768627!2d29.041169!3d40.9988144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab868e91707e3%3A0x8f45d53677a12088!2sHasanpa%C5%9Fa%20Mah.%20Uzun%C3%A7ay%C4%B1r%20Cd.%20Konak%20%C4%B0%C5%9F%20Merkezi%20A%20Blok%20No%3A%2030%20K%3A2%20D%3A%2030%2C%2034722%20Kad%C4%B1k%C3%B6y!5e0!3m2!1str!2str!4v1721258093296!5m2!1str!2str"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
