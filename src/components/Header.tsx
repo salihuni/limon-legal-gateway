@@ -76,42 +76,26 @@ const Header: React.FC = () => {
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="Türkçe"
             >
-              {/* Turkish Flag */}
-              <div className="w-6 h-4 relative overflow-hidden rounded">
-                <div className="absolute inset-0 bg-red-600"></div>
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <div className="absolute w-1.5 h-1.5 bg-red-600 rounded-full left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-                </div>
-              </div>
+              <Flag 
+                size={20}
+                className="text-red-600" 
+                strokeWidth={0}
+                fill="currentColor"
+                data-country="tr"
+              />
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="English"
             >
-              {/* US Flag */}
-              <div className="w-6 h-4 relative overflow-hidden rounded">
-                <div className="absolute inset-0 bg-blue-800"></div>
-                <div className="absolute top-0 left-0 w-3 h-2 bg-blue-800">
-                  {/* Stars - simplified as white dots */}
-                  <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                  <div className="absolute top-0.5 left-1.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                  <div className="absolute top-1.5 left-0.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                  <div className="absolute top-1.5 left-1.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                </div>
-                {/* Stripes */}
-                <div className="absolute top-0 right-0 w-3 h-4">
-                  <div className="absolute top-0 w-full h-0.5 bg-white"></div>
-                  <div className="absolute top-1 w-full h-0.5 bg-red-600"></div>
-                  <div className="absolute top-2 w-full h-0.5 bg-white"></div>
-                  <div className="absolute top-3 w-full h-0.5 bg-red-600"></div>
-                  <div className="absolute top-4 w-full h-0.5 bg-white"></div>
-                </div>
-                {/* Red stripes that extend across the whole flag */}
-                <div className="absolute top-2 left-0 w-full h-0.5 bg-red-600"></div>
-                <div className="absolute top-3 left-0 w-full h-0.5 bg-red-600"></div>
-              </div>
+              <Flag 
+                size={20}
+                className="text-blue-800" 
+                strokeWidth={0}
+                fill="currentColor"
+                data-country="us"
+              />
             </button>
           </div>
         </nav>
@@ -124,42 +108,26 @@ const Header: React.FC = () => {
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="Türkçe"
             >
-              {/* Turkish Flag */}
-              <div className="w-6 h-4 relative overflow-hidden rounded">
-                <div className="absolute inset-0 bg-red-600"></div>
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <div className="absolute w-1.5 h-1.5 bg-red-600 rounded-full left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-                </div>
-              </div>
+              <Flag 
+                size={20}
+                className="text-red-600" 
+                strokeWidth={0}
+                fill="currentColor"
+                data-country="tr"
+              />
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="English"
             >
-              {/* US Flag */}
-              <div className="w-6 h-4 relative overflow-hidden rounded">
-                <div className="absolute inset-0 bg-blue-800"></div>
-                <div className="absolute top-0 left-0 w-3 h-2 bg-blue-800">
-                  {/* Stars - simplified as white dots */}
-                  <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                  <div className="absolute top-0.5 left-1.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                  <div className="absolute top-1.5 left-0.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                  <div className="absolute top-1.5 left-1.5 w-0.5 h-0.5 bg-white rounded-full"></div>
-                </div>
-                {/* Stripes */}
-                <div className="absolute top-0 right-0 w-3 h-4">
-                  <div className="absolute top-0 w-full h-0.5 bg-white"></div>
-                  <div className="absolute top-1 w-full h-0.5 bg-red-600"></div>
-                  <div className="absolute top-2 w-full h-0.5 bg-white"></div>
-                  <div className="absolute top-3 w-full h-0.5 bg-red-600"></div>
-                  <div className="absolute top-4 w-full h-0.5 bg-white"></div>
-                </div>
-                {/* Red stripes that extend across the whole flag */}
-                <div className="absolute top-2 left-0 w-full h-0.5 bg-red-600"></div>
-                <div className="absolute top-3 left-0 w-full h-0.5 bg-red-600"></div>
-              </div>
+              <Flag 
+                size={20}
+                className="text-blue-800" 
+                strokeWidth={0}
+                fill="currentColor"
+                data-country="us"
+              />
             </button>
           </div>
           <button 
