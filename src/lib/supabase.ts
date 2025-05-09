@@ -35,8 +35,16 @@ export interface ContentItem {
 // Functions to interact with Supabase
 export const submitContactMessage = async (message: Message): Promise<{ success: boolean; error: any }> => {
   try {
-    const { error } = await supabase.from('messages').insert([message]);
-    if (error) throw error;
+    // Use proper error handling and logging
+    console.log('Submitting contact message:', message);
+    const { error, data } = await supabase.from('messages').insert([message]);
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    console.log('Message submitted successfully:', data);
     return { success: true, error: null };
   } catch (error) {
     console.error('Error submitting contact message:', error);

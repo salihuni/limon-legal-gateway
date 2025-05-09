@@ -4,10 +4,15 @@ import { useLanguage } from '../context/LanguageContext';
 import { toast } from "../hooks/use-toast";
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { submitContactMessage } from '../lib/supabase';
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const ContactPage: React.FC = () => {
   const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,14 +30,20 @@ const ContactPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmissionError(null);
 
     try {
+      // Add logging to track submission flow
+      console.log('Starting form submission process');
+      
       // Submit the form data to Supabase
       const { success, error } = await submitContactMessage({
         name: formData.name,
         email: formData.email,
         message: formData.message
       });
+      
+      console.log('Form submission response:', { success, error });
       
       if (success) {
         // Show success message
@@ -49,13 +60,15 @@ const ContactPage: React.FC = () => {
         });
       } else {
         console.error('Error submitting form:', error);
+        setSubmissionError(t('contact.form.error'));
         toast({
           title: t('contact.form.error'),
           variant: "destructive",
         });
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Exception when submitting form:', error);
+      setSubmissionError(t('contact.form.error'));
       toast({
         title: t('contact.form.error'),
         variant: "destructive",
@@ -154,12 +167,21 @@ const ContactPage: React.FC = () => {
                 <h2 className="text-2xl font-bold mb-6 text-limon-darkBlue font-playfair">
                   {t('contact.subtitle')}
                 </h2>
+                
+                {/* Show error alert if there was a submission error */}
+                {submissionError && (
+                  <Alert variant="destructive" className="mb-6">
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{submissionError}</AlertDescription>
+                  </Alert>
+                )}
+                
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                       {t('contact.form.name')} *
                     </label>
-                    <input
+                    <Input
                       type="text"
                       id="name"
                       name="name"
@@ -173,7 +195,7 @@ const ContactPage: React.FC = () => {
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                       {t('contact.form.email')} *
                     </label>
-                    <input
+                    <Input
                       type="email"
                       id="email"
                       name="email"
@@ -187,7 +209,7 @@ const ContactPage: React.FC = () => {
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
                       {t('contact.form.message')} *
                     </label>
-                    <textarea
+                    <Textarea
                       id="message"
                       name="message"
                       value={formData.message}
@@ -195,10 +217,10 @@ const ContactPage: React.FC = () => {
                       rows={6}
                       required
                       className="input-field"
-                    ></textarea>
+                    />
                   </div>
                   <div>
-                    <button
+                    <Button
                       type="submit"
                       disabled={isSubmitting}
                       className={`btn-secondary w-full ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
@@ -214,7 +236,7 @@ const ContactPage: React.FC = () => {
                       ) : (
                         t('contact.form.submit')
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </div>
