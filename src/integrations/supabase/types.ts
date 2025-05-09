@@ -9,90 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      appointments: {
-        Row: {
-          created_at: string
-          date: string
-          email: string
-          id: string
-          name: string
-          notes: string | null
-          phone: string
-          service: string
-          status: string
-        }
-        Insert: {
-          created_at?: string
-          date: string
-          email: string
-          id?: string
-          name: string
-          notes?: string | null
-          phone: string
-          service: string
-          status?: string
-        }
-        Update: {
-          created_at?: string
-          date?: string
-          email?: string
-          id?: string
-          name?: string
-          notes?: string | null
-          phone?: string
-          service?: string
-          status?: string
-        }
-        Relationships: []
-      }
-      content: {
-        Row: {
-          id: string
-          key: string
-          lang: string
-          section: string
-          updated_at: string
-          value: string
-        }
-        Insert: {
-          id?: string
-          key: string
-          lang: string
-          section: string
-          updated_at?: string
-          value: string
-        }
-        Update: {
-          id?: string
-          key?: string
-          lang?: string
-          section?: string
-          updated_at?: string
-          value?: string
-        }
-        Relationships: []
-      }
       messages: {
         Row: {
-          created_at: string
-          email: string
-          id: string
-          message: string
-          name: string
+          created_at: string | null
+          email: string | null
+          id: string | null
+          message: string | null
+          name: string | null
         }
         Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          message: string
-          name: string
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          message?: string | null
+          name?: string | null
         }
         Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          message?: string
-          name?: string
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          message?: string | null
+          name?: string | null
         }
         Relationships: []
       }
@@ -101,10 +38,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
