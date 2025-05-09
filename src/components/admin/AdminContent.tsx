@@ -1,23 +1,219 @@
 
-import React, { useState } from 'react';
-import { FileText, Loader2 } from 'lucide-react';
-import AddContentForm from './content/AddContentForm';
-import ContentList from './content/ContentList';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from "@/hooks/use-toast";
+import { FileText } from 'lucide-react';
 import ContentFilter from './content/ContentFilter';
-import { ContentProvider, useContent } from '@/context/ContentContext';
+import ContentList from './content/ContentList';
+import AddContentForm from './content/AddContentForm';
 
-const AdminContentContainer: React.FC = () => {
-  const [selectedSection, setSelectedSection] = useState<string>('home');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
-  const { loading, handleAddNewContent, saving } = useContent();
+interface ContentItem {
+  id?: string;
+  section: string;
+  lang: string;
+  key: string;
+  value: string;
+}
+
+interface GroupedContent {
+  [section: string]: {
+    [key: string]: {
+      [lang: string]: ContentItem;
+    };
+  };
+}
+
+const SECTIONS = ['home', 'about', 'services'];
+const LANGUAGES = ['en', 'tr'];
+
+const AdminContent: React.FC = () => {
+  const [content, setContent] = useState<ContentItem[]>([]);
+  const [groupedContent, setGroupedContent] = useState<GroupedContent>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [selectedSection, setSelectedSection] = useState<string>(SECTIONS[0]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[0]);
+  
+  useEffect(() => {
+    fetchContent();
+  }, []);
+
+  useEffect(() => {
+    if (content.length > 0) {
+      organizeContent();
+    }
+  }, [content]);
+
+  const fetchContent = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('content')
+        .select('*')
+        .order('section, key');
+
+      if (error) throw error;
+      setContent(data || []);
+    } catch (error) {
+      console.error('Error fetching content:', error);
+      toast({
+        title: "Failed to load content",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const organizeContent = () => {
+    const grouped: GroupedContent = {};
+
+    content.forEach(item => {
+      if (!grouped[item.section]) {
+        grouped[item.section] = {};
+      }
+      
+      if (!grouped[item.section][item.key]) {
+        grouped[item.section][item.key] = {};
+      }
+      
+      grouped[item.section][item.key][item.lang] = item;
+    });
+
+    setGroupedContent(grouped);
+  };
+
+  const handleContentChange = (section: string, key: string, lang: string, value: string) => {
+    setGroupedContent(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [key]: {
+          ...prev[section][key],
+          [lang]: {
+            ...prev[section][key][lang],
+            value
+          }
+        }
+      }
+    }));
+  };
+
+  const saveContent = async (section: string, key: string) => {
+    try {
+      setSaving(true);
+      
+      const items = LANGUAGES.map(lang => {
+        const item = groupedContent[section][key][lang];
+        return {
+          id: item?.id,
+          section: item?.section || section,
+          key: item?.key || key,
+          lang,
+          value: item?.value || ''
+        };
+      });
+
+      for (const item of items) {
+        if (item.id) {
+          // Update existing content
+          const { error } = await supabase
+            .from('content')
+            .update({ value: item.value })
+            .match({ id: item.id });
+            
+          if (error) throw error;
+        } else {
+          // Insert new content
+          const { error } = await supabase
+            .from('content')
+            .insert({
+              section: item.section,
+              key: item.key,
+              lang: item.lang,
+              value: item.value
+            });
+            
+          if (error) throw error;
+        }
+      }
+      
+      toast({
+        title: "Content saved successfully",
+      });
+      
+      // Refresh content
+      fetchContent();
+      
+    } catch (error) {
+      console.error('Error saving content:', error);
+      toast({
+        title: "Failed to save content",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddNewContent = async (section: string, key: string, values: Record<string, string>) => {
+    if (!section || !key.trim()) {
+      toast({
+        title: "Please select a section and provide a key",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check if any language value is empty
+    const hasEmptyValue = Object.values(values).some(val => !val.trim());
+    if (hasEmptyValue) {
+      toast({
+        title: "Please provide values for all languages",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      
+      // Create array of content items for all languages
+      const newItems = LANGUAGES.map(lang => ({
+        section,
+        key: key.trim(),
+        lang,
+        value: values[lang]
+      }));
+      
+      const { error } = await supabase
+        .from('content')
+        .insert(newItems);
+        
+      if (error) throw error;
+      
+      toast({
+        title: "New content added successfully",
+      });
+      
+      // Refresh content
+      fetchContent();
+      
+    } catch (error) {
+      console.error('Error adding content:', error);
+      toast({
+        title: "Failed to add content",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center p-8 min-h-[300px]">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Loader2 className="h-6 w-6 animate-spin" />
-          <span>Loading content...</span>
-        </div>
+      <div className="flex justify-center p-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-limon-darkBlue"></div>
       </div>
     );
   }
@@ -26,33 +222,36 @@ const AdminContentContainer: React.FC = () => {
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex items-center mb-6">
         <FileText className="mr-2 h-5 w-5 text-limon-gold" />
-        <h2 className="text-2xl font-bold">Manage Website Content</h2>
+        <h2 className="text-2xl font-bold">Manage Content</h2>
       </div>
       
       <ContentFilter 
+        sections={SECTIONS}
+        languages={LANGUAGES}
         selectedSection={selectedSection}
         selectedLanguage={selectedLanguage}
         onSectionChange={setSelectedSection}
         onLanguageChange={setSelectedLanguage}
+        onRefresh={fetchContent}
       />
       
       <ContentList 
         section={selectedSection}
         language={selectedLanguage}
+        groupedContent={groupedContent}
+        languages={LANGUAGES}
+        onContentChange={handleContentChange}
+        onSaveContent={saveContent}
+        saving={saving}
       />
       
       <AddContentForm 
+        sections={SECTIONS}
+        languages={LANGUAGES}
+        onAddContent={handleAddNewContent}
         saving={saving}
       />
     </div>
-  );
-};
-
-const AdminContent: React.FC = () => {
-  return (
-    <ContentProvider>
-      <AdminContentContainer />
-    </ContentProvider>
   );
 };
 
