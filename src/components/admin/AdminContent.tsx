@@ -13,6 +13,21 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { FileText, Save, Plus } from 'lucide-react';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 
 interface ContentItem {
   id?: string;
@@ -38,11 +53,15 @@ const AdminContent: React.FC = () => {
   const [groupedContent, setGroupedContent] = useState<GroupedContent>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [selectedSection, setSelectedSection] = useState<string>(SECTIONS[0]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[0]);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [newContentKey, setNewContentKey] = useState('');
   const [newContentValues, setNewContentValues] = useState<Record<string, string>>(
     LANGUAGES.reduce((acc, lang) => ({ ...acc, [lang]: '' }), {})
   );
+  
+  const form = useForm();
 
   useEffect(() => {
     fetchContent();
@@ -116,11 +135,11 @@ const AdminContent: React.FC = () => {
       const items = LANGUAGES.map(lang => {
         const item = groupedContent[section][key][lang];
         return {
-          id: item.id,
-          section: item.section,
-          key: item.key,
-          lang: item.lang,
-          value: item.value
+          id: item?.id,
+          section: item?.section || section,
+          key: item?.key || key,
+          lang,
+          value: item?.value || ''
         };
       });
 
@@ -226,6 +245,11 @@ const AdminContent: React.FC = () => {
     }
   };
 
+  const filterContentBySection = (section: string) => {
+    if (!groupedContent[section]) return {};
+    return groupedContent[section];
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center p-8">
@@ -241,107 +265,174 @@ const AdminContent: React.FC = () => {
         <h2 className="text-2xl font-bold">Manage Content</h2>
       </div>
       
-      <Accordion type="single" collapsible className="mb-8">
-        {SECTIONS.map(section => (
-          <AccordionItem key={section} value={section}>
-            <AccordionTrigger 
-              className="text-lg font-semibold capitalize"
-              onClick={() => setActiveSection(section)}
-            >
-              {section} Section
-            </AccordionTrigger>
-            <AccordionContent>
-              {groupedContent[section] ? (
-                Object.keys(groupedContent[section]).map(key => (
-                  <div key={key} className="mb-8 border-b pb-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="font-medium text-md">Key: <span className="font-bold">{key}</span></h3>
-                      <Button 
-                        onClick={() => saveContent(section, key)}
-                        disabled={saving}
-                        size="sm"
-                        className="flex items-center gap-1"
-                      >
-                        <Save className="h-4 w-4" />
-                        {saving ? "Saving..." : "Save"}
-                      </Button>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {LANGUAGES.map(lang => {
-                        const content = groupedContent[section][key][lang];
-                        return (
-                          <div key={lang} className="space-y-2">
-                            <Label className="capitalize">{lang}</Label>
-                            {content?.value && content.value.length > 100 ? (
-                              <Textarea
-                                value={content?.value || ''}
-                                onChange={(e) => handleContentChange(section, key, lang, e.target.value)}
-                                rows={4}
-                              />
-                            ) : (
-                              <Input
-                                value={content?.value || ''}
-                                onChange={(e) => handleContentChange(section, key, lang, e.target.value)}
-                              />
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500 py-2">No content found for this section</p>
-              )}
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="w-full md:w-auto">
+          <Label htmlFor="section-filter">Filter by Section</Label>
+          <Select 
+            defaultValue={selectedSection} 
+            onValueChange={setSelectedSection}
+          >
+            <SelectTrigger className="w-full md:w-[200px]">
+              <SelectValue placeholder="Select section" />
+            </SelectTrigger>
+            <SelectContent>
+              {SECTIONS.map(section => (
+                <SelectItem key={section} value={section}>
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div className="w-full md:w-auto">
+          <Label htmlFor="language-filter">Filter by Language</Label>
+          <Select 
+            defaultValue={selectedLanguage} 
+            onValueChange={setSelectedLanguage}
+          >
+            <SelectTrigger className="w-full md:w-[200px]">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              {LANGUAGES.map(lang => (
+                <SelectItem key={lang} value={lang}>
+                  {lang.toUpperCase()}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-              {/* Add new content form */}
-              <div className="mt-6 pt-6 border-t">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add New Content
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="key">Content Key</Label>
-                    <Input 
-                      id="key"
-                      value={newContentKey}
-                      onChange={(e) => setNewContentKey(e.target.value)}
-                      placeholder="Enter content key (e.g. title, subtitle)"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {LANGUAGES.map(lang => (
-                      <div key={lang} className="space-y-2">
-                        <Label htmlFor={`new-${lang}`} className="capitalize">{lang} Value</Label>
-                        <Input
-                          id={`new-${lang}`}
-                          value={newContentValues[lang]}
-                          onChange={(e) => setNewContentValues(prev => ({
-                            ...prev,
-                            [lang]: e.target.value
-                          }))}
-                          placeholder={`Enter ${lang} content value`}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  
+        <div className="w-full">
+          <Button 
+            onClick={fetchContent}
+            variant="outline"
+            className="mt-6"
+          >
+            Refresh Content
+          </Button>
+        </div>
+      </div>
+      
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold mb-4">
+          {selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)} Content - {selectedLanguage.toUpperCase()}
+        </h3>
+        
+        {Object.keys(filterContentBySection(selectedSection)).length > 0 ? (
+          <div className="space-y-6">
+            {Object.entries(filterContentBySection(selectedSection)).map(([key, langValues]) => (
+              <div key={key} className="border rounded-md p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-medium text-md">Key: <span className="font-bold">{key}</span></h4>
                   <Button 
-                    onClick={handleAddNewContent}
-                    disabled={saving || !newContentKey.trim()}
-                    className="w-full md:w-auto"
+                    onClick={() => saveContent(selectedSection, key)}
+                    disabled={saving}
+                    size="sm"
+                    className="flex items-center gap-1"
                   >
-                    {saving ? "Adding..." : "Add Content"}
+                    <Save className="h-4 w-4" />
+                    {saving ? "Saving..." : "Save"}
                   </Button>
                 </div>
+                
+                <div className="space-y-4">
+                  {LANGUAGES.filter(lang => lang === selectedLanguage).map(lang => {
+                    const contentItem = langValues[lang];
+                    const value = contentItem?.value || '';
+                    
+                    return (
+                      <div key={lang} className="space-y-2">
+                        <Label className="capitalize">{lang}</Label>
+                        {value && value.length > 100 ? (
+                          <Textarea
+                            value={value}
+                            onChange={(e) => handleContentChange(selectedSection, key, lang, e.target.value)}
+                            rows={4}
+                          />
+                        ) : (
+                          <Input
+                            value={value}
+                            onChange={(e) => handleContentChange(selectedSection, key, lang, e.target.value)}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 border rounded-md">
+            <p className="text-gray-500">No content found for this section/language combination</p>
+          </div>
+        )}
+      </div>
+      
+      <div className="mt-10 pt-6 border-t">
+        <h3 className="font-semibold mb-4 flex items-center gap-2">
+          <Plus className="h-4 w-4" />
+          Add New Content
+        </h3>
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="content-section">Section</Label>
+            <Select 
+              defaultValue={activeSection || ''} 
+              onValueChange={setActiveSection}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select section" />
+              </SelectTrigger>
+              <SelectContent>
+                {SECTIONS.map(section => (
+                  <SelectItem key={section} value={section}>
+                    {section.charAt(0).toUpperCase() + section.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label htmlFor="key">Content Key</Label>
+            <Input 
+              id="key"
+              value={newContentKey}
+              onChange={(e) => setNewContentKey(e.target.value)}
+              placeholder="Enter content key (e.g. title, subtitle)"
+            />
+          </div>
+          
+          <div className="space-y-4">
+            {LANGUAGES.map(lang => (
+              <div key={lang} className="space-y-2">
+                <Label htmlFor={`new-${lang}`} className="capitalize">{lang} Value</Label>
+                <Textarea
+                  id={`new-${lang}`}
+                  value={newContentValues[lang]}
+                  onChange={(e) => setNewContentValues(prev => ({
+                    ...prev,
+                    [lang]: e.target.value
+                  }))}
+                  placeholder={`Enter ${lang} content value`}
+                  rows={3}
+                />
+              </div>
+            ))}
+          </div>
+          
+          <Button 
+            onClick={handleAddNewContent}
+            disabled={saving || !activeSection || !newContentKey.trim()}
+            className="w-full md:w-auto"
+          >
+            {saving ? "Adding..." : "Add Content"}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
