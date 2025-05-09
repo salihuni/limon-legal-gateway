@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ContentItem } from '@/lib/supabase';
@@ -26,9 +25,10 @@ interface ContentContextType {
   handleAddNewContent: (section: string, key: string, values: Record<string, string>) => Promise<void>;
   handleRenameKey: (section: string, oldKey: string, newKey: string) => Promise<void>;
   handleAddSection: (section: string) => void;
+  getContentItemId: (section: string, key: string, lang: string) => string | undefined;
 }
 
-const DEFAULT_SECTIONS = ['home', 'about', 'services', 'contact', 'footer'];
+const DEFAULT_SECTIONS = ['home', 'about', 'services', 'contact', 'footer', 'common'];
 const LANGUAGES = ['en', 'tr'];
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
@@ -99,19 +99,44 @@ export const ContentProvider: React.FC<{children: ReactNode}> = ({ children }) =
   };
 
   const handleContentChange = (section: string, key: string, lang: string, value: string) => {
-    setGroupedContent(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [key]: {
-          ...prev[section][key],
-          [lang]: {
-            ...prev[section][key][lang],
-            value
-          }
-        }
+    setGroupedContent(prev => {
+      // Create a deep copy to avoid mutating the state directly
+      const newGroupedContent = { ...prev };
+      
+      // Ensure the section exists
+      if (!newGroupedContent[section]) {
+        newGroupedContent[section] = {};
       }
-    }));
+      
+      // Ensure the key exists
+      if (!newGroupedContent[section][key]) {
+        newGroupedContent[section][key] = {};
+      }
+      
+      // If the content item exists, update it
+      if (newGroupedContent[section][key][lang]) {
+        newGroupedContent[section][key][lang] = {
+          ...newGroupedContent[section][key][lang],
+          value
+        };
+      } 
+      // Otherwise, create a new content item (for inline editing)
+      else {
+        newGroupedContent[section][key][lang] = {
+          id: undefined,
+          section,
+          key,
+          lang,
+          value
+        };
+      }
+      
+      return newGroupedContent;
+    });
+  };
+
+  const getContentItemId = (section: string, key: string, lang: string): string | undefined => {
+    return groupedContent[section]?.[key]?.[lang]?.id;
   };
 
   const saveContent = async (section: string, key: string) => {
@@ -119,7 +144,7 @@ export const ContentProvider: React.FC<{children: ReactNode}> = ({ children }) =
       setSaving(true);
       
       const items = LANGUAGES.map(lang => {
-        const item = groupedContent[section][key][lang];
+        const item = groupedContent[section]?.[key]?.[lang];
         return {
           id: item?.id,
           section: item?.section || section,
@@ -393,6 +418,7 @@ export const ContentProvider: React.FC<{children: ReactNode}> = ({ children }) =
       handleAddNewContent,
       handleRenameKey,
       handleAddSection,
+      getContentItemId,
     }}>
       {children}
     </ContentContext.Provider>

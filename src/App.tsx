@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "./context/LanguageContext";
+import { ContentProvider } from "./context/ContentContext";
 
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -22,21 +23,23 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <LanguageProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Header />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/appointment" element={<AppointmentPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
-        </BrowserRouter>
+        <ContentProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Header />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/appointment" element={<AppointmentPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+          </BrowserRouter>
+        </ContentProvider>
       </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import EditableContent from '@/components/editable/EditableContent';
 
 const AboutPage: React.FC = () => {
   const { t } = useLanguage();
@@ -49,7 +50,7 @@ const AboutPage: React.FC = () => {
   ];
 
   const team = [
-    {
+    { 
       id: 1,
       name: 'Ahmet Yılmaz',
       title: 'Senior Partner',
@@ -99,10 +100,20 @@ const AboutPage: React.FC = () => {
         ></div>
         <div className="container mx-auto px-4 z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white font-playfair mb-6">
-            {t('about.title')}
+            <EditableContent 
+              section="about" 
+              contentKey="title" 
+              defaultValue="About Limon & Partners" 
+              tag="span"
+            />
           </h1>
           <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto">
-            {t('about.subtitle')}
+            <EditableContent 
+              section="about" 
+              contentKey="subtitle" 
+              defaultValue="Professional legal services with a personal touch" 
+              tag="span"
+            />
           </p>
         </div>
       </section>
@@ -112,10 +123,23 @@ const AboutPage: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="section-title">{t('about.history_title')}</h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                {t('about.history_text')}
-              </p>
+              <h2 className="section-title">
+                <EditableContent 
+                  section="about" 
+                  contentKey="history_title" 
+                  defaultValue="Our History" 
+                  tag="span"
+                />
+              </h2>
+              <div className="text-gray-600 mb-6 leading-relaxed">
+                <EditableContent 
+                  section="about" 
+                  contentKey="history_text" 
+                  defaultValue="Founded in 2005, Limon & Partners has grown from a small practice to one of the region's most respected law firms. Our journey began with three dedicated attorneys and a vision to provide exceptional legal services that prioritize client needs. Today, we are a team of over 50 legal professionals serving clients across multiple countries and practice areas. Throughout our growth, we've maintained our foundational values of integrity, excellence, and personalized attention." 
+                  tag="p"
+                  multiline={true}
+                />
+              </div>
               <div className="flex flex-wrap gap-8 mt-8">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-limon-gold mb-2">2005</div>
@@ -157,11 +181,22 @@ const AboutPage: React.FC = () => {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold mb-4 text-limon-darkBlue font-playfair">
-                {t('about.mission_title')}
+                <EditableContent 
+                  section="about" 
+                  contentKey="mission_title" 
+                  defaultValue="Our Mission" 
+                  tag="span"
+                />
               </h3>
-              <p className="text-gray-600">
-                {t('about.mission_text')}
-              </p>
+              <div className="text-gray-600">
+                <EditableContent 
+                  section="about" 
+                  contentKey="mission_text" 
+                  defaultValue="To provide exceptional legal representation while maintaining the highest standards of professional ethics and personal integrity. We are committed to understanding each client's unique needs and delivering tailored solutions that achieve their goals efficiently and effectively." 
+                  tag="p"
+                  multiline={true}
+                />
+              </div>
             </div>
             <div className="card">
               <div className="mb-6">
@@ -171,11 +206,22 @@ const AboutPage: React.FC = () => {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold mb-4 text-limon-darkBlue font-playfair">
-                {t('about.vision_title')}
+                <EditableContent 
+                  section="about" 
+                  contentKey="vision_title" 
+                  defaultValue="Our Vision" 
+                  tag="span"
+                />
               </h3>
-              <p className="text-gray-600">
-                {t('about.vision_text')}
-              </p>
+              <div className="text-gray-600">
+                <EditableContent 
+                  section="about" 
+                  contentKey="vision_text" 
+                  defaultValue="To be recognized as the leading law firm in our region, known for our legal expertise, client-focused approach, and commitment to making a positive difference in the communities we serve. We aim to set new standards in the legal profession through innovation, collaboration, and unwavering dedication to excellence." 
+                  tag="p"
+                  multiline={true}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -185,7 +231,14 @@ const AboutPage: React.FC = () => {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="section-title">{t('about.values_title')}</h2>
+            <h2 className="section-title">
+              <EditableContent 
+                section="about" 
+                contentKey="values_title" 
+                defaultValue="Our Values" 
+                tag="span"
+              />
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {values.map((value) => (
@@ -195,11 +248,22 @@ const AboutPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-3 text-limon-darkBlue font-playfair">
-                    {value.title}
+                    <EditableContent 
+                      section="about.values" 
+                      contentKey={value.id} 
+                      defaultValue={value.title} 
+                      tag="span"
+                    />
                   </h3>
-                  <p className="text-gray-600">
-                    {value.description}
-                  </p>
+                  <div className="text-gray-600">
+                    <EditableContent 
+                      section="about.values" 
+                      contentKey={`${value.id}_text`} 
+                      defaultValue={value.description} 
+                      tag="p"
+                      multiline={true}
+                    />
+                  </div>
                 </div>
               </div>
             ))}
@@ -211,9 +275,21 @@ const AboutPage: React.FC = () => {
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="section-title">{t('about.team_section_title')}</h2>
+            <h2 className="section-title">
+              <EditableContent 
+                section="about" 
+                contentKey="team_section_title" 
+                defaultValue="Our Team" 
+                tag="span"
+              />
+            </h2>
             <p className="section-subtitle mx-auto">
-              {t('about.team_section_subtitle')}
+              <EditableContent 
+                section="about" 
+                contentKey="team_section_subtitle" 
+                defaultValue="Meet the legal experts dedicated to your success" 
+                tag="span"
+              />
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
