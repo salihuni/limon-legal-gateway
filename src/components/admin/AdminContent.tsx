@@ -1,19 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from "@/hooks/use-toast";
 import { FileText } from 'lucide-react';
 import ContentFilter from './content/ContentFilter';
 import ContentList from './content/ContentList';
 import AddContentForm from './content/AddContentForm';
-
-interface ContentItem {
-  id?: string;
-  section: string;
-  lang: string;
-  key: string;
-  value: string;
-}
+import { ContentItem, fetchContent, updateContent, insertContent } from '@/lib/supabase';
 
 interface GroupedContent {
   [section: string]: {
@@ -35,7 +27,7 @@ const AdminContent: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[0]);
   
   useEffect(() => {
-    fetchContent();
+    getContent();
   }, []);
 
   useEffect(() => {
@@ -44,16 +36,11 @@ const AdminContent: React.FC = () => {
     }
   }, [content]);
 
-  const fetchContent = async () => {
+  const getContent = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('content')
-        .select('*')
-        .order('section, key');
-
-      if (error) throw error;
-      setContent(data || []);
+      const data = await fetchContent();
+      setContent(data as ContentItem[] || []);
     } catch (error) {
       console.error('Error fetching content:', error);
       toast({
@@ -117,24 +104,15 @@ const AdminContent: React.FC = () => {
       for (const item of items) {
         if (item.id) {
           // Update existing content
-          const { error } = await supabase
-            .from('content')
-            .update({ value: item.value })
-            .match({ id: item.id });
-            
-          if (error) throw error;
+          await updateContent(item as ContentItem);
         } else {
           // Insert new content
-          const { error } = await supabase
-            .from('content')
-            .insert({
-              section: item.section,
-              key: item.key,
-              lang: item.lang,
-              value: item.value
-            });
-            
-          if (error) throw error;
+          await insertContent([{
+            section: item.section,
+            key: item.key,
+            lang: item.lang,
+            value: item.value
+          }]);
         }
       }
       
@@ -143,7 +121,7 @@ const AdminContent: React.FC = () => {
       });
       
       // Refresh content
-      fetchContent();
+      getContent();
       
     } catch (error) {
       console.error('Error saving content:', error);
@@ -186,18 +164,14 @@ const AdminContent: React.FC = () => {
         value: values[lang]
       }));
       
-      const { error } = await supabase
-        .from('content')
-        .insert(newItems);
-        
-      if (error) throw error;
+      await insertContent(newItems);
       
       toast({
         title: "New content added successfully",
       });
       
       // Refresh content
-      fetchContent();
+      getContent();
       
     } catch (error) {
       console.error('Error adding content:', error);
@@ -232,7 +206,7 @@ const AdminContent: React.FC = () => {
         selectedLanguage={selectedLanguage}
         onSectionChange={setSelectedSection}
         onLanguageChange={setSelectedLanguage}
-        onRefresh={fetchContent}
+        onRefresh={getContent}
       />
       
       <ContentList 

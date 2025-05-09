@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from "@/hooks/use-toast";
 import { 
   Table, TableBody, TableCaption, TableCell, 
@@ -8,7 +7,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Check, X, Calendar } from 'lucide-react';
-import type { Appointment } from '@/lib/supabase';
+import { Appointment, fetchAppointments, updateAppointmentStatus } from '@/lib/supabase';
 import { format } from 'date-fns';
 
 const AdminAppointments: React.FC = () => {
@@ -16,20 +15,13 @@ const AdminAppointments: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAppointments();
+    getAppointments();
   }, []);
 
-  const fetchAppointments = async () => {
+  const getAppointments = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('appointments')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      
-      // Cast the data to the correct Appointment type
+      const data = await fetchAppointments();
       setAppointments(data as Appointment[] || []);
     } catch (error) {
       console.error('Error fetching appointments:', error);
@@ -42,14 +34,9 @@ const AdminAppointments: React.FC = () => {
     }
   };
 
-  const updateAppointmentStatus = async (id: string, status: 'confirmed' | 'cancelled') => {
+  const handleUpdateStatus = async (id: string, status: 'confirmed' | 'cancelled') => {
     try {
-      const { error } = await supabase
-        .from('appointments')
-        .update({ status })
-        .match({ id });
-
-      if (error) throw error;
+      await updateAppointmentStatus(id, status);
       
       // Update local state
       setAppointments(appointments.map(appointment => 
@@ -84,7 +71,7 @@ const AdminAppointments: React.FC = () => {
           <Calendar className="mr-2 h-5 w-5 text-limon-gold" />
           Appointments ({appointments.length})
         </h2>
-        <Button onClick={fetchAppointments}>Refresh</Button>
+        <Button onClick={getAppointments}>Refresh</Button>
       </div>
       
       {appointments.length > 0 ? (
@@ -125,7 +112,7 @@ const AdminAppointments: React.FC = () => {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => updateAppointmentStatus(appointment.id!, 'confirmed')}
+                          onClick={() => handleUpdateStatus(appointment.id!, 'confirmed')}
                           className="text-green-600 border-green-600 hover:bg-green-50"
                         >
                           <Check className="h-4 w-4" />
@@ -133,7 +120,7 @@ const AdminAppointments: React.FC = () => {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => updateAppointmentStatus(appointment.id!, 'cancelled')}
+                          onClick={() => handleUpdateStatus(appointment.id!, 'cancelled')}
                           className="text-red-600 border-red-600 hover:bg-red-50"
                         >
                           <X className="h-4 w-4" />
