@@ -11,6 +11,7 @@ import AboutPage from "./pages/AboutPage";
 import ServicesPage from "./pages/ServicesPage";
 import AppointmentPage from "./pages/AppointmentPage";
 import ContactPage from "./pages/ContactPage";
+import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/appointment" element={<AppointmentPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
