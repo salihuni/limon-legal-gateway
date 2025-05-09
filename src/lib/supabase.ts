@@ -23,6 +23,15 @@ export interface Appointment {
   created_at?: string;
 }
 
+export interface ContentItem {
+  id?: string;
+  section: string;
+  lang: string;
+  key: string;
+  value: string;
+  updated_at?: string;
+}
+
 // Functions to interact with Supabase
 export const submitContactMessage = async (message: Message): Promise<{ success: boolean; error: any }> => {
   try {
