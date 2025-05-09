@@ -1,6 +1,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../integrations/supabase/client';
+import { Database } from '../integrations/supabase/types';
 
 // Type definitions for our database tables
 export interface Message {
@@ -62,76 +63,88 @@ export const fetchMessages = async (): Promise<Message[]> => {
   return data as Message[];
 };
 
-// Mock implementations for tables that don't exist yet
-// These functions will work with our UI but won't actually persist data until we create the tables
-
-// Mock appointments functionality
+// Functions for appointments table
 export const submitAppointment = async (appointment: Appointment): Promise<{ success: boolean; error: any }> => {
   try {
-    console.log('Mock submitting appointment:', appointment);
-    // This would insert into 'appointments' table, but we'll mock it since the table doesn't exist yet
+    console.log('Submitting appointment:', appointment);
+    const { error, data } = await supabase.from('appointments').insert([appointment]);
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    console.log('Appointment submitted successfully:', data);
     return { success: true, error: null };
   } catch (error) {
-    console.error('Error in mock appointment submission:', error);
+    console.error('Error submitting appointment:', error);
     return { success: false, error };
   }
 };
 
 export const fetchAppointments = async (): Promise<Appointment[]> => {
-  console.log('Mock fetching appointments');
-  // Return mock data
-  return [
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      phone: '555-1234',
-      date: '2025-06-01T10:00:00',
-      service: 'Consultation',
-      status: 'pending',
-      created_at: new Date().toISOString()
-    }
-  ];
+  const { data, error } = await supabase
+    .from('appointments')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data as Appointment[];
 };
 
 export const updateAppointmentStatus = async (id: string, status: 'confirmed' | 'cancelled'): Promise<boolean> => {
-  console.log(`Mock updating appointment ${id} status to ${status}`);
-  // This would update the appointments table, but we'll mock it
-  return true;
+  try {
+    const { error } = await supabase
+      .from('appointments')
+      .update({ status })
+      .eq('id', id);
+    
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error updating appointment status:', error);
+    return false;
+  }
 };
 
-// Mock content functionality
+// Functions for content table
 export const fetchContent = async (): Promise<ContentItem[]> => {
-  console.log('Mock fetching content items');
-  // Return mock data
-  return [
-    {
-      id: '1',
-      section: 'home',
-      lang: 'en',
-      key: 'title',
-      value: 'Welcome to Limon Law',
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: '2',
-      section: 'home',
-      lang: 'tr',
-      key: 'title',
-      value: 'Limon Hukuk Bürosuna Hoş Geldiniz',
-      updated_at: new Date().toISOString()
-    }
-  ];
+  const { data, error } = await supabase
+    .from('content')
+    .select('*');
+  
+  if (error) throw error;
+  return data as ContentItem[];
 };
 
 export const updateContent = async (item: ContentItem): Promise<boolean> => {
-  console.log('Mock updating content item:', item);
-  // This would update the content table, but we'll mock it
-  return true;
+  try {
+    const { error } = await supabase
+      .from('content')
+      .update({ 
+        value: item.value,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', item.id);
+    
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error updating content:', error);
+    return false;
+  }
 };
 
 export const insertContent = async (items: Omit<ContentItem, 'id' | 'updated_at'>[]): Promise<boolean> => {
-  console.log('Mock inserting content items:', items);
-  // This would insert into the content table, but we'll mock it
-  return true;
+  try {
+    const { error } = await supabase
+      .from('content')
+      .insert(items);
+    
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error inserting content:', error);
+    return false;
+  }
 };
