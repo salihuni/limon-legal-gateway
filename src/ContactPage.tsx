@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
-import { useLanguage } from '../context/LanguageContext';
-import { toast } from "../hooks/use-toast";
+import { useLanguage } from './context/LanguageContext';
+import { toast } from "./hooks/use-toast";
 import { MapPin, Phone, Mail } from 'lucide-react';
-import { submitContactMessage } from '../lib/supabase';
+import { submitContactMessage } from './lib/supabase';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
