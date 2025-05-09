@@ -12,7 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { RefreshCw, Save } from 'lucide-react';
+import { RefreshCw, Save, Trash2 } from 'lucide-react';
+import { ContentItem as ContentItemType } from '@/lib/supabase';
 
 interface ContentListProps {
   section: string;
@@ -21,6 +22,7 @@ interface ContentListProps {
   languages: string[];
   onContentChange: (section: string, key: string, lang: string, value: string) => void;
   onSaveContent: (section: string, key: string) => void;
+  onDeleteContent: (section: string, key: string) => void;
   saving: boolean;
   onRenameKey?: (section: string, oldKey: string, newKey: string) => void;
   onBulkSave?: (section: string) => void;
@@ -34,12 +36,14 @@ const ContentList: React.FC<ContentListProps> = ({
   languages,
   onContentChange,
   onSaveContent,
+  onDeleteContent,
   saving,
   onRenameKey,
   onBulkSave,
   onRefresh
 }) => {
   const [confirmBulkSave, setConfirmBulkSave] = useState(false);
+  const [confirmDeleteSection, setConfirmDeleteSection] = useState(false);
   
   const filterContentBySection = (section: string) => {
     if (!groupedContent[section]) return {};
@@ -99,6 +103,7 @@ const ContentList: React.FC<ContentListProps> = ({
               languages={languages}
               onContentChange={(key, lang, value) => onContentChange(section, key, lang, value)}
               onSave={(key) => onSaveContent(section, key)}
+              onDelete={(key) => onDeleteContent(section, key)}
               saving={saving}
               onKeyChange={handleRenameKey}
             />

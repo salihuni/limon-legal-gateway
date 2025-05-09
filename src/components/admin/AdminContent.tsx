@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from "@/hooks/use-toast";
-import { ContentItem } from '@/lib/supabase';
+import { ContentItem, deleteContent } from '@/lib/supabase';
 import { FileText, Loader2 } from 'lucide-react';
 import ContentFilter from './content/ContentFilter';
 import ContentList from './content/ContentList';
@@ -157,6 +157,44 @@ const AdminContent: React.FC = () => {
       console.error('Error saving content:', error);
       toast({
         title: "Failed to save content",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteContent = async (section: string, key: string) => {
+    try {
+      setSaving(true);
+      
+      // Find all items with this section and key across all languages
+      const itemsToDelete = content.filter(
+        item => item.section === section && item.key === key
+      );
+      
+      for (const item of itemsToDelete) {
+        if (item.id) {
+          const { error } = await supabase
+            .from('content')
+            .delete()
+            .match({ id: item.id });
+            
+          if (error) throw error;
+        }
+      }
+      
+      toast({
+        title: "Content deleted successfully",
+      });
+      
+      // Refresh content
+      fetchContent();
+      
+    } catch (error) {
+      console.error('Error deleting content:', error);
+      toast({
+        title: "Failed to delete content",
         variant: "destructive",
       });
     } finally {
@@ -370,6 +408,7 @@ const AdminContent: React.FC = () => {
         languages={LANGUAGES}
         onContentChange={handleContentChange}
         onSaveContent={saveContent}
+        onDeleteContent={handleDeleteContent}
         saving={saving}
         onRenameKey={handleRenameKey}
         onBulkSave={handleBulkSave}

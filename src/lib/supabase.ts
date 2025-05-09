@@ -102,3 +102,35 @@ export const createContent = async (contentItem: Omit<ContentItem, 'id' | 'updat
     return { success: false, error };
   }
 };
+
+export const deleteContent = async (id: string): Promise<{ success: boolean; error: any }> => {
+  try {
+    const { error } = await supabase
+      .from('content')
+      .delete()
+      .match({ id });
+    
+    if (error) throw error;
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('Error deleting content:', error);
+    return { success: false, error };
+  }
+};
+
+export const fetchContentBySection = async (section: string, language: string): Promise<{ data: ContentItem[] | null; error: any }> => {
+  try {
+    const { data, error } = await supabase
+      .from('content')
+      .select('*')
+      .eq('section', section)
+      .eq('lang', language)
+      .order('key');
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error(`Error fetching content for section ${section}:`, error);
+    return { data: null, error };
+  }
+};
