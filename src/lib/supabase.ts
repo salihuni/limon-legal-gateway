@@ -57,3 +57,48 @@ export const submitAppointment = async (appointment: Appointment): Promise<{ suc
     return { success: false, error };
   }
 };
+
+// Content management functions
+export const fetchContent = async (): Promise<{ data: ContentItem[] | null; error: any }> => {
+  try {
+    const { data, error } = await supabase
+      .from('content')
+      .select('*')
+      .order('section, key');
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Error fetching content:', error);
+    return { data: null, error };
+  }
+};
+
+export const updateContent = async (id: string, value: string): Promise<{ success: boolean; error: any }> => {
+  try {
+    const { error } = await supabase
+      .from('content')
+      .update({ value })
+      .match({ id });
+    
+    if (error) throw error;
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('Error updating content:', error);
+    return { success: false, error };
+  }
+};
+
+export const createContent = async (contentItem: Omit<ContentItem, 'id' | 'updated_at'>): Promise<{ success: boolean; error: any }> => {
+  try {
+    const { error } = await supabase
+      .from('content')
+      .insert([contentItem]);
+    
+    if (error) throw error;
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('Error creating content:', error);
+    return { success: false, error };
+  }
+};

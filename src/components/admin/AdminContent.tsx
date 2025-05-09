@@ -2,18 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from "@/hooks/use-toast";
-import { FileText } from 'lucide-react';
+import { ContentItem } from '@/lib/supabase';
+import { FileText, Loader2 } from 'lucide-react';
 import ContentFilter from './content/ContentFilter';
 import ContentList from './content/ContentList';
 import AddContentForm from './content/AddContentForm';
-
-interface ContentItem {
-  id?: string;
-  section: string;
-  lang: string;
-  key: string;
-  value: string;
-}
 
 interface GroupedContent {
   [section: string]: {
@@ -23,7 +16,7 @@ interface GroupedContent {
   };
 }
 
-const SECTIONS = ['home', 'about', 'services'];
+const DEFAULT_SECTIONS = ['home', 'about', 'services', 'contact', 'footer'];
 const LANGUAGES = ['en', 'tr'];
 
 const AdminContent: React.FC = () => {
@@ -31,8 +24,9 @@ const AdminContent: React.FC = () => {
   const [groupedContent, setGroupedContent] = useState<GroupedContent>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [selectedSection, setSelectedSection] = useState<string>(SECTIONS[0]);
+  const [selectedSection, setSelectedSection] = useState<string>(DEFAULT_SECTIONS[0]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[0]);
+  const [sections, setSections] = useState<string[]>(DEFAULT_SECTIONS);
   
   useEffect(() => {
     fetchContent();
@@ -41,6 +35,7 @@ const AdminContent: React.FC = () => {
   useEffect(() => {
     if (content.length > 0) {
       organizeContent();
+      extractSections();
     }
   }, [content]);
 
@@ -81,6 +76,19 @@ const AdminContent: React.FC = () => {
     });
 
     setGroupedContent(grouped);
+  };
+  
+  const extractSections = () => {
+    const contentSections = [...new Set(content.map(item => item.section))];
+    
+    // Merge with default sections and remove duplicates
+    const allSections = Array.from(new Set([...DEFAULT_SECTIONS, ...contentSections]));
+    setSections(allSections);
+    
+    // If selected section doesn't exist in content, select first available
+    if (contentSections.length && !contentSections.includes(selectedSection)) {
+      setSelectedSection(contentSections[0]);
+    }
   };
 
   const handleContentChange = (section: string, key: string, lang: string, value: string) => {
@@ -156,6 +164,68 @@ const AdminContent: React.FC = () => {
     }
   };
 
+  const handleBulkSave = async (section: string) => {
+    try {
+      setSaving(true);
+      
+      const sectionContent = groupedContent[section];
+      const updates = [];
+      const insertions = [];
+      
+      for (const [key, langValues] of Object.entries(sectionContent)) {
+        for (const [lang, contentItem] of Object.entries(langValues)) {
+          if (contentItem.id) {
+            updates.push({
+              id: contentItem.id,
+              value: contentItem.value
+            });
+          } else {
+            insertions.push({
+              section,
+              key,
+              lang,
+              value: contentItem.value || ''
+            });
+          }
+        }
+      }
+      
+      // Execute updates in batches
+      if (updates.length > 0) {
+        const { error } = await supabase
+          .from('content')
+          .upsert(updates);
+          
+        if (error) throw error;
+      }
+      
+      // Execute insertions
+      if (insertions.length > 0) {
+        const { error } = await supabase
+          .from('content')
+          .insert(insertions);
+          
+        if (error) throw error;
+      }
+      
+      toast({
+        title: `All content in ${section} section saved successfully`,
+      });
+      
+      // Refresh content
+      fetchContent();
+      
+    } catch (error) {
+      console.error('Error bulk saving content:', error);
+      toast({
+        title: "Failed to save all content",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleAddNewContent = async (section: string, key: string, values: Record<string, string>) => {
     if (!section || !key.trim()) {
       toast({
@@ -209,11 +279,68 @@ const AdminContent: React.FC = () => {
       setSaving(false);
     }
   };
+  
+  const handleRenameKey = async (section: string, oldKey: string, newKey: string) => {
+    try {
+      setSaving(true);
+      
+      // Get all content items with this section and key
+      const itemsToUpdate = content.filter(item => 
+        item.section === section && item.key === oldKey
+      );
+      
+      // Update each item's key
+      for (const item of itemsToUpdate) {
+        const { error } = await supabase
+          .from('content')
+          .update({ key: newKey })
+          .match({ id: item.id });
+          
+        if (error) throw error;
+      }
+      
+      toast({
+        title: "Content key renamed successfully",
+      });
+      
+      // Refresh content
+      fetchContent();
+      
+    } catch (error) {
+      console.error('Error renaming content key:', error);
+      toast({
+        title: "Failed to rename content key",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+  
+  const handleAddSection = async (section: string) => {
+    if (!sections.includes(section)) {
+      setSections(prev => [...prev, section]);
+      setSelectedSection(section);
+      
+      toast({
+        title: `New section "${section}" added`,
+        description: "You can now add content to this section"
+      });
+    } else {
+      toast({
+        title: "Section already exists",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (loading) {
     return (
-      <div className="flex justify-center p-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-limon-darkBlue"></div>
+      <div className="flex justify-center items-center p-8 min-h-[300px]">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>Loading content...</span>
+        </div>
       </div>
     );
   }
@@ -222,17 +349,18 @@ const AdminContent: React.FC = () => {
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex items-center mb-6">
         <FileText className="mr-2 h-5 w-5 text-limon-gold" />
-        <h2 className="text-2xl font-bold">Manage Content</h2>
+        <h2 className="text-2xl font-bold">Manage Website Content</h2>
       </div>
       
       <ContentFilter 
-        sections={SECTIONS}
+        sections={sections}
         languages={LANGUAGES}
         selectedSection={selectedSection}
         selectedLanguage={selectedLanguage}
         onSectionChange={setSelectedSection}
         onLanguageChange={setSelectedLanguage}
         onRefresh={fetchContent}
+        onAddSection={handleAddSection}
       />
       
       <ContentList 
@@ -243,10 +371,13 @@ const AdminContent: React.FC = () => {
         onContentChange={handleContentChange}
         onSaveContent={saveContent}
         saving={saving}
+        onRenameKey={handleRenameKey}
+        onBulkSave={handleBulkSave}
+        onRefresh={fetchContent}
       />
       
       <AddContentForm 
-        sections={SECTIONS}
+        sections={sections}
         languages={LANGUAGES}
         onAddContent={handleAddNewContent}
         saving={saving}
