@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
@@ -31,21 +30,15 @@ const HomePage: React.FC = () => {
   const team = [
     {
       id: 1,
-      name: 'Ahmet Yılmaz',
+      name: 'Enes Alan',
       title: 'Senior Partner',
       image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=300&auto=format&fit=crop',
     },
     {
       id: 2,
-      name: 'Ayşe Demir',
+      name: 'Esin Akçay Alan',
       title: 'Partner',
       image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop',
-    },
-    {
-      id: 3,
-      name: 'Mehmet Kaya',
-      title: 'Associate',
-      image: 'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=300&auto=format&fit=crop',
     }
   ];
 
@@ -157,7 +150,7 @@ const HomePage: React.FC = () => {
               {t('home.team_subtitle')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {team.map((member) => (
               <div key={member.id} className="card text-center hover:translate-y-[-5px]">
                 <div className="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto">
