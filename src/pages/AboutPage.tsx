@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -89,7 +90,7 @@ const AboutPage: React.FC = () => {
             <div>
               <h2 className="section-title">{t('about.history_title')}</h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                {t('about.history_text')}
+                {t('about.history_text').replace('2005', '2023')}
               </p>
               <div className="flex flex-wrap gap-8 mt-8">
                 <div className="text-center">
