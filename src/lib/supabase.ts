@@ -2,14 +2,25 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Get environment variables from Supabase Secrets
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Check if Supabase URL and key exist
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase URL or Anonymous Key');
+  console.error('Missing Supabase URL or Anonymous Key. Please add these in your Supabase project settings under "Project Settings > API".');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create a Supabase client with proper fallbacks to prevent runtime errors
+const supabaseClient = () => {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    // Provide dummy values to prevent the app from crashing
+    // This will allow the app to render, but Supabase functionality won't work
+    return createClient('https://placeholder-url.supabase.co', 'placeholder-key');
+  }
+  return createClient(supabaseUrl, supabaseAnonKey);
+};
+
+export const supabase = supabaseClient();
 
 // Type definitions for our database tables
 export interface Message {
