@@ -1,0 +1,110 @@
+
+{
+  "common": {
+    "firm_name": "Limon Hukuk Bürosu",
+    "book_appointment": "Randevu Al",
+    "contact_us": "Bize Ulaşın",
+    "more": "Daha Fazla",
+    "submit": "Gönder",
+    "phone": "Telefon",
+    "address": "Adres",
+    "email": "E-posta"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımızda",
+    "services": "Hizmetlerimiz",
+    "appointment": "Randevu",
+    "contact": "İletişim"
+  },
+  "home": {
+    "hero_title": "Hukuki Meseleleriniz İçin Güvenilir Çözüm Ortağınız",
+    "hero_subtitle": "Uzman kadromuz ve profesyonel yaklaşımımızla tüm hukuki ihtiyaçlarınıza yüksek kaliteli çözümler sunuyoruz.",
+    "intro_title": "Limon Hukuk Bürosu'na Hoş Geldiniz",
+    "intro_text": "2005 yılından bu yana müvekkillerimize ulusal ve uluslararası alanda hukuki danışmanlık hizmeti vermekteyiz. Deneyimli avukatlarımız ve uzman ekibimizle her türlü hukuki sorunlarınıza profesyonel çözümler üretiyoruz.",
+    "services_title": "Hizmetlerimiz",
+    "services_subtitle": "Size sunduğumuz geniş hukuki hizmet yelpazesi",
+    "team_title": "Uzman Ekibimiz",
+    "team_subtitle": "Alanında deneyimli hukuk profesyonelleri",
+    "testimonials_title": "Müvekkil Yorumları",
+    "testimonials_subtitle": "Müvekkillerimizin bizimle olan deneyimleri"
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "subtitle": "Limon Hukuk Bürosu kimdir?",
+    "history_title": "Tarihçemiz",
+    "history_text": "Limon Hukuk Bürosu, 2005 yılında kurulmuş olup, kurulduğu günden bu yana müvekkillerine ulusal ve uluslararası alanda hukuki hizmet vermektedir. Yıllar içinde edindiği deneyim ve bilgi birikimini, dinamik ve yenilikçi yaklaşımıyla birleştirerek, müvekkillerine en iyi hukuki çözümleri sunmaya devam etmektedir.",
+    "mission_title": "Misyonumuz",
+    "mission_text": "Müvekkillerimizin hukuki sorunlarına, etik değerlere bağlı kalarak, dürüst, şeffaf ve kaliteli hizmet anlayışıyla çözüm üretmek.",
+    "vision_title": "Vizyonumuz",
+    "vision_text": "Hukuki hizmet kalitesi ve müvekkil memnuniyeti ile uluslararası standartlarda referans gösterilen bir hukuk bürosu olmak.",
+    "values_title": "Değerlerimiz",
+    "values": {
+      "integrity": "Dürüstlük",
+      "integrity_text": "Müvekkillerimize karşı her zaman dürüst ve şeffaf olmayı ilke ediniyoruz.",
+      "excellence": "Mükemmeliyetçilik",
+      "excellence_text": "Her detayda en üst düzeyde kalite sunmak için çalışıyoruz.",
+      "respect": "Saygı",
+      "respect_text": "Tüm paydaşlarımıza ve hukuk sistemine derin bir saygı duyuyoruz.",
+      "innovation": "Yenilikçilik",
+      "innovation_text": "Değişen dünya ve hukuk sistemine ayak uydurmak için sürekli yenileniyoruz."
+    },
+    "team_section_title": "Ekibimiz",
+    "team_section_subtitle": "Alanında uzman profesyonellerden oluşan ekibimiz"
+  },
+  "services": {
+    "title": "Hizmetlerimiz",
+    "subtitle": "Sunduğumuz hukuki hizmetler",
+    "corporate_law": "Şirketler Hukuku",
+    "corporate_law_desc": "Şirket kuruluşu, birleşme ve devralma işlemleri, şirket içi düzenlemeler ve ticari sözleşmeler konusunda hukuki danışmanlık.",
+    "family_law": "Aile Hukuku",
+    "family_law_desc": "Boşanma, velayet, nafaka, mal paylaşımı ve miras konularında uzman hukuki destek.",
+    "criminal_law": "Ceza Hukuku",
+    "criminal_law_desc": "Soruşturma ve kovuşturma süreçlerinde etkili savunma ve hukuki temsil.",
+    "real_estate_law": "Gayrimenkul Hukuku",
+    "real_estate_law_desc": "Gayrimenkul alım-satım işlemleri, imar hukuku, kira sözleşmeleri ve gayrimenkul davaları.",
+    "labor_law": "İş Hukuku",
+    "labor_law_desc": "İşçi-işveren ilişkileri, iş sözleşmeleri, işe iade, kıdem ve ihbar tazminatı davaları.",
+    "intellectual_property": "Fikri Mülkiyet Hukuku",
+    "intellectual_property_desc": "Patent, marka tescili, telif hakları ve fikri mülkiyet davaları.",
+    "tax_law": "Vergi Hukuku",
+    "tax_law_desc": "Vergi planlaması, vergi uyuşmazlıkları ve vergi davaları konusunda danışmanlık.",
+    "debt_collection": "Alacak Tahsili",
+    "debt_collection_desc": "Alacakların tahsili, icra takibi ve iflas işlemleri."
+  },
+  "appointment": {
+    "title": "Randevu",
+    "subtitle": "Bir görüşme talep edin",
+    "form": {
+      "name": "Adınız Soyadınız",
+      "email": "E-posta Adresiniz",
+      "phone": "Telefon Numaranız",
+      "date": "Tercih Ettiğiniz Tarih",
+      "service": "Hizmet Türü",
+      "notes": "Notlar",
+      "submit": "Randevu Talebi Gönder",
+      "success": "Randevu talebiniz başarıyla alınmıştır. En kısa sürede sizinle iletişime geçeceğiz.",
+      "error": "Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
+    }
+  },
+  "contact": {
+    "title": "İletişim",
+    "subtitle": "Bizimle iletişime geçin",
+    "address": "İstanbul, Şişli, Mecidiyeköy Mah. Büyükdere Cad. No: 123 Kat: 5",
+    "phone": "+90 212 123 45 67",
+    "email": "info@limonhukuk.com",
+    "form": {
+      "name": "Adınız Soyadınız",
+      "email": "E-posta Adresiniz",
+      "message": "Mesajınız",
+      "submit": "Gönder",
+      "success": "Mesajınız başarıyla gönderilmiştir. En kısa sürede size dönüş yapacağız.",
+      "error": "Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
+    }
+  },
+  "footer": {
+    "rights": "© 2023 Limon Hukuk Bürosu. Tüm hakları saklıdır.",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Koşulları"
+  }
+}
