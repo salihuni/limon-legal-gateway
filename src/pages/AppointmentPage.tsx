@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { toast } from "../hooks/use-toast";
 import { CalendarClock } from 'lucide-react';
+import { submitAppointment } from '../lib/supabase';
 
 const AppointmentPage: React.FC = () => {
   const { t } = useLanguage();
@@ -28,29 +29,40 @@ const AppointmentPage: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Here you would normally connect to Supabase
-    // Since we don't have Supabase connected yet, we're simulating a submission
     try {
-      // Simulating API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      console.log('Appointment form data:', formData);
-      
-      // Show success message
-      toast({
-        title: t('appointment.form.success'),
-        variant: "default",
+      // Submit the form data to Supabase
+      const { success, error } = await submitAppointment({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        date: formData.date,
+        service: formData.service,
+        notes: formData.notes || ''
       });
       
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        date: '',
-        service: '',
-        notes: '',
-      });
+      if (success) {
+        // Show success message
+        toast({
+          title: t('appointment.form.success'),
+          variant: "default",
+        });
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          date: '',
+          service: '',
+          notes: '',
+        });
+      } else {
+        console.error('Error submitting form:', error);
+        toast({
+          title: t('appointment.form.error'),
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({

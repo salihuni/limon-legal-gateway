@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { toast } from "../hooks/use-toast";
 import { MapPin, Phone, Mail } from 'lucide-react';
+import { submitContactMessage } from '../lib/supabase';
 
 const ContactPage: React.FC = () => {
   const { t } = useLanguage();
@@ -25,26 +25,34 @@ const ContactPage: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Here you would normally connect to Supabase
-    // Since we don't have Supabase connected yet, we're simulating a submission
     try {
-      // Simulating API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      console.log('Contact form data:', formData);
-      
-      // Show success message
-      toast({
-        title: t('contact.form.success'),
-        variant: "default",
+      // Submit the form data to Supabase
+      const { success, error } = await submitContactMessage({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message
       });
       
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        message: '',
-      });
+      if (success) {
+        // Show success message
+        toast({
+          title: t('contact.form.success'),
+          variant: "default",
+        });
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          message: '',
+        });
+      } else {
+        console.error('Error submitting form:', error);
+        toast({
+          title: t('contact.form.error'),
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
