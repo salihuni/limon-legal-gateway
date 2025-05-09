@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Link, useLocation } from 'react-router-dom';
-import { Flag } from 'lucide-react';
 
 const Header: React.FC = () => {
   const { t, language, changeLanguage } = useLanguage();
@@ -24,31 +23,6 @@ const Header: React.FC = () => {
   }, [location.pathname]);
 
   const isActive = (path: string) => location.pathname === path;
-
-  const renderFlag = (countryCode: string) => {
-    if (countryCode === 'tr') {
-      return (
-        <div className="relative w-6 h-4 bg-red-600 flex items-center justify-center">
-          <div className="absolute w-2 h-2 bg-white rounded-full">
-            <div className="absolute w-1.5 h-1.5 bg-red-600 rounded-full left-[0.125rem] top-[0.125rem]"></div>
-          </div>
-        </div>
-      );
-    } else if (countryCode === 'us') {
-      return (
-        <div className="relative w-6 h-4">
-          <div className="absolute inset-0 bg-blue-800 w-2.5 h-2"></div>
-          <div className="absolute inset-0">
-            <div className="absolute top-0 h-[0.3rem] w-full bg-red-600"></div>
-            <div className="absolute top-[0.6rem] h-[0.3rem] w-full bg-red-600"></div>
-            <div className="absolute top-[1.2rem] h-[0.3rem] w-full bg-red-600"></div>
-            <div className="absolute top-[1.8rem] h-[0.3rem] w-full bg-red-600"></div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <header 
@@ -98,17 +72,17 @@ const Header: React.FC = () => {
           <div className="ml-6 flex items-center space-x-2">
             <button 
               onClick={() => changeLanguage('tr')} 
-              className={`p-1.5 rounded-full flex items-center justify-center ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="Türkçe"
             >
-              {renderFlag('tr')}
+              🇹🇷
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
-              className={`p-1.5 rounded-full flex items-center justify-center ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="English"
             >
-              {renderFlag('us')}
+              🇬🇧
             </button>
           </div>
         </nav>
@@ -118,17 +92,17 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button 
               onClick={() => changeLanguage('tr')} 
-              className={`p-1.5 rounded-full flex items-center justify-center ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="Türkçe"
             >
-              {renderFlag('tr')}
+              🇹🇷
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
-              className={`p-1.5 rounded-full flex items-center justify-center ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="English"
             >
-              {renderFlag('us')}
+              🇬🇧
             </button>
           </div>
           <button 
