@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -51,39 +50,21 @@ const AboutPage: React.FC = () => {
   const team = [
     {
       id: 1,
-      name: 'Ahmet Yılmaz',
+      name: 'Enes Alan',
       title: 'Senior Partner',
-      image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=300&auto=format&fit=crop',
+      image: '', // Empty image URL
       education: 'LL.M., Harvard Law School',
       specialty: 'Corporate Law',
       experience: '20+ years'
     },
     {
       id: 2,
-      name: 'Ayşe Demir',
+      name: 'Esin Akçay Alan',
       title: 'Partner',
-      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop',
+      image: '', // Empty image URL
       education: 'J.D., Istanbul University',
       specialty: 'Family Law',
       experience: '15+ years'
-    },
-    {
-      id: 3,
-      name: 'Mehmet Kaya',
-      title: 'Associate',
-      image: 'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=300&auto=format&fit=crop',
-      education: 'LL.B., Ankara University',
-      specialty: 'Criminal Law',
-      experience: '8+ years'
-    },
-    {
-      id: 4,
-      name: 'Zeynep Şahin',
-      title: 'Associate',
-      image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=300&auto=format&fit=crop',
-      education: 'LL.B., Bilkent University',
-      specialty: 'Real Estate Law',
-      experience: '6+ years'
     }
   ];
 
@@ -216,15 +197,21 @@ const AboutPage: React.FC = () => {
               {t('about.team_section_subtitle')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {team.map((member) => (
               <div key={member.id} className="card text-center hover:translate-y-[-5px]">
                 <div className="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-4xl">{member.name.charAt(0)}</span>
+                    </div>
+                  )}
                 </div>
                 <h3 className="text-xl font-bold mb-1 text-limon-darkBlue font-playfair">
                   {member.name}

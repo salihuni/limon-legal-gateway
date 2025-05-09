@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
@@ -32,13 +33,13 @@ const HomePage: React.FC = () => {
       id: 1,
       name: 'Enes Alan',
       title: 'Senior Partner',
-      image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=300&auto=format&fit=crop',
+      image: '', // Empty image URL
     },
     {
       id: 2,
       name: 'Esin Akçay Alan',
       title: 'Partner',
-      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop',
+      image: '', // Empty image URL
     }
   ];
 
@@ -154,11 +155,17 @@ const HomePage: React.FC = () => {
             {team.map((member) => (
               <div key={member.id} className="card text-center hover:translate-y-[-5px]">
                 <div className="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-4xl">{member.name.charAt(0)}</span>
+                    </div>
+                  )}
                 </div>
                 <h3 className="text-xl font-bold mb-1 text-limon-darkBlue font-playfair">
                   {member.name}
