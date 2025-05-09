@@ -104,8 +104,8 @@ const Index = () => {
 
         <div className="mt-8 text-sm text-gray-600">
           <h3 className="font-medium mb-2">Environment Configuration:</h3>
-          <p className="mb-1">Supabase URL: {supabase.supabaseUrl}</p>
-          <p>API Key is {supabase.supabaseKey ? 'Set' : 'Not Set'}</p>
+          <p className="mb-1">Supabase URL: {import.meta.env.VITE_SUPABASE_URL || 'Using default URL'}</p>
+          <p>API Key is {import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Not Set'}</p>
           
           <div className="mt-4 p-3 bg-gray-50 rounded border">
             <p className="font-medium mb-1">Troubleshooting Tips:</p>
