@@ -72,17 +72,17 @@ const Header: React.FC = () => {
           <div className="ml-6 flex items-center space-x-2">
             <button 
               onClick={() => changeLanguage('tr')} 
-              className={`p-1.5 rounded-full ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full font-medium text-sm ${language === 'tr' ? 'bg-limon-gold text-white' : 'bg-gray-200 text-gray-700'}`}
               aria-label="Türkçe"
             >
-              🇹🇷
+              TR
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
-              className={`p-1.5 rounded-full ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full font-medium text-sm ${language === 'en' ? 'bg-limon-gold text-white' : 'bg-gray-200 text-gray-700'}`}
               aria-label="English"
             >
-              🇬🇧
+              EN
             </button>
           </div>
         </nav>
@@ -92,17 +92,17 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button 
               onClick={() => changeLanguage('tr')} 
-              className={`p-1.5 rounded-full ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full font-medium text-sm ${language === 'tr' ? 'bg-limon-gold text-white' : 'bg-gray-200 text-gray-700'}`}
               aria-label="Türkçe"
             >
-              🇹🇷
+              TR
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
-              className={`p-1.5 rounded-full ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
+              className={`p-1.5 rounded-full font-medium text-sm ${language === 'en' ? 'bg-limon-gold text-white' : 'bg-gray-200 text-gray-700'}`}
               aria-label="English"
             >
-              🇬🇧
+              EN
             </button>
           </div>
           <button 
