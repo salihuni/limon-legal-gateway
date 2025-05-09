@@ -1,48 +1,32 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { LogOut } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import AdminMessages from "@/components/admin/AdminMessages";
 import AdminAppointments from "@/components/admin/AdminAppointments";
 import AdminContent from "@/components/admin/AdminContent";
 import AdminLogin from "@/components/admin/AdminLogin";
+import { useAuth } from '@/lib/auth';
 
 const AdminPage: React.FC = () => {
-  const [session, setSession] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      const { success, error } = await signOut();
+      
+      if (error) throw new Error(error);
+      
       toast({
         title: "Logged out successfully",
         variant: "default",
       });
       navigate('/admin');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error logging out:', error);
       toast({
         title: "Failed to log out",
@@ -59,7 +43,7 @@ const AdminPage: React.FC = () => {
     );
   }
 
-  if (!session) {
+  if (!user) {
     return <AdminLogin />;
   }
 

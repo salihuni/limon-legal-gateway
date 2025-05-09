@@ -1,12 +1,15 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/lib/auth';
 
 const Index = () => {
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [data, setData] = useState<any[]>([]);
+  const { user } = useAuth();
 
   const testConnection = async () => {
     setConnectionStatus('loading');
@@ -44,23 +47,31 @@ const Index = () => {
             Click the button below to test your connection to Supabase
           </p>
           
-          <Button 
-            onClick={testConnection} 
-            disabled={connectionStatus === 'loading'}
-            className="mb-6"
-          >
-            {connectionStatus === 'loading' ? 'Testing...' : 'Test Connection'}
-          </Button>
+          <div className="flex flex-col gap-4 justify-center items-center">
+            <Button 
+              onClick={testConnection} 
+              disabled={connectionStatus === 'loading'}
+              className="mb-2"
+            >
+              {connectionStatus === 'loading' ? 'Testing...' : 'Test Connection'}
+            </Button>
+
+            <Link to="/admin">
+              <Button variant="outline" className="flex items-center gap-2">
+                {user ? 'Go to Admin Dashboard' : 'Admin Login'}
+              </Button>
+            </Link>
+          </div>
 
           {connectionStatus === 'success' && (
-            <div className="p-4 border border-green-200 rounded bg-green-50 text-green-700">
+            <div className="p-4 border border-green-200 rounded bg-green-50 text-green-700 mt-4">
               <p className="font-semibold">Connection successful!</p>
               <p>Your app is properly connected to Supabase.</p>
             </div>
           )}
 
           {connectionStatus === 'error' && (
-            <div className="p-4 border border-red-200 rounded bg-red-50 text-red-700">
+            <div className="p-4 border border-red-200 rounded bg-red-50 text-red-700 mt-4">
               <p className="font-semibold">Connection failed!</p>
               <p>There was an error connecting to Supabase. Check the console for details.</p>
               <div className="mt-2 text-sm">
@@ -103,15 +114,13 @@ const Index = () => {
         )}
 
         <div className="mt-8 text-sm text-gray-600">
-          <h3 className="font-medium mb-2">Environment Configuration:</h3>
-          <p className="mb-1">Supabase URL: {import.meta.env.VITE_SUPABASE_URL || 'Using default URL'}</p>
-          <p>API Key is {import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Not Set'}</p>
+          <h3 className="font-medium mb-2">Authentication Status:</h3>
+          <p className="mb-1">{user ? `Logged in as: ${user.email}` : 'Not logged in'}</p>
           
           <div className="mt-4 p-3 bg-gray-50 rounded border">
             <p className="font-medium mb-1">Troubleshooting Tips:</p>
             <ul className="list-disc list-inside space-y-1">
               <li>Make sure your Supabase project is active</li>
-              <li>Check that VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are correct</li>
               <li>For Vercel deployment, verify environment variables are named correctly</li>
               <li>Check Supabase's Authentication settings for proper URL configuration</li>
             </ul>

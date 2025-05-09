@@ -1,17 +1,20 @@
 
 import React, { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { LogIn, Mail, Lock } from 'lucide-react';
+import { useAuth } from '@/lib/auth';
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
 
   const handleAuthentication = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,12 +23,9 @@ const AdminLogin: React.FC = () => {
     try {
       if (isSignUp) {
         // Sign up
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-
-        if (error) throw error;
+        const { success, error } = await signUp(email, password);
+        
+        if (error) throw new Error(error);
         
         toast({
           title: "Registration successful!",
@@ -33,16 +33,15 @@ const AdminLogin: React.FC = () => {
         });
       } else {
         // Login
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) throw error;
+        const { success, error } = await signIn(email, password);
+        
+        if (error) throw new Error(error);
         
         toast({
           title: "Logged in successfully",
         });
+        
+        navigate('/admin');
       }
     } catch (error: any) {
       console.error('Authentication error:', error);
