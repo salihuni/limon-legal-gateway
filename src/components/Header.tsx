@@ -25,6 +25,31 @@ const Header: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const renderFlag = (countryCode: string) => {
+    if (countryCode === 'tr') {
+      return (
+        <div className="relative w-6 h-4 bg-red-600 flex items-center justify-center">
+          <div className="absolute w-2 h-2 bg-white rounded-full">
+            <div className="absolute w-1.5 h-1.5 bg-red-600 rounded-full left-[0.125rem] top-[0.125rem]"></div>
+          </div>
+        </div>
+      );
+    } else if (countryCode === 'us') {
+      return (
+        <div className="relative w-6 h-4">
+          <div className="absolute inset-0 bg-blue-800 w-2.5 h-2"></div>
+          <div className="absolute inset-0">
+            <div className="absolute top-0 h-[0.3rem] w-full bg-red-600"></div>
+            <div className="absolute top-[0.6rem] h-[0.3rem] w-full bg-red-600"></div>
+            <div className="absolute top-[1.2rem] h-[0.3rem] w-full bg-red-600"></div>
+            <div className="absolute top-[1.8rem] h-[0.3rem] w-full bg-red-600"></div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <header 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
@@ -76,26 +101,14 @@ const Header: React.FC = () => {
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="Türkçe"
             >
-              <Flag 
-                size={20}
-                className="text-red-600" 
-                strokeWidth={0}
-                fill="currentColor"
-                data-country="tr"
-              />
+              {renderFlag('tr')}
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="English"
             >
-              <Flag 
-                size={20}
-                className="text-blue-800" 
-                strokeWidth={0}
-                fill="currentColor"
-                data-country="us"
-              />
+              {renderFlag('us')}
             </button>
           </div>
         </nav>
@@ -108,26 +121,14 @@ const Header: React.FC = () => {
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'tr' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="Türkçe"
             >
-              <Flag 
-                size={20}
-                className="text-red-600" 
-                strokeWidth={0}
-                fill="currentColor"
-                data-country="tr"
-              />
+              {renderFlag('tr')}
             </button>
             <button 
               onClick={() => changeLanguage('en')} 
               className={`p-1.5 rounded-full flex items-center justify-center ${language === 'en' ? 'bg-limon-gold/20 ring-1 ring-limon-gold' : ''}`}
               aria-label="English"
             >
-              <Flag 
-                size={20}
-                className="text-blue-800" 
-                strokeWidth={0}
-                fill="currentColor"
-                data-country="us"
-              />
+              {renderFlag('us')}
             </button>
           </div>
           <button 
