@@ -51,20 +51,14 @@ const AboutPage: React.FC = () => {
     {
       id: 1,
       name: 'Enes Alan',
-      title: 'Senior Partner',
+      title: 'Lawyer',
       image: '', // Empty image URL
-      education: 'LL.M., Harvard Law School',
-      specialty: 'Corporate Law',
-      experience: '20+ years'
     },
     {
       id: 2,
       name: 'Esin Akçay Alan',
-      title: 'Partner',
+      title: 'Lawyer',
       image: '', // Empty image URL
-      education: 'J.D., Istanbul University',
-      specialty: 'Family Law',
-      experience: '15+ years'
     }
   ];
 
@@ -217,11 +211,6 @@ const AboutPage: React.FC = () => {
                   {member.name}
                 </h3>
                 <p className="text-limon-gold mb-2">{member.title}</p>
-                <div className="text-sm text-gray-600 space-y-1">
-                  <p>{member.education}</p>
-                  <p>{member.specialty}</p>
-                  <p>{member.experience}</p>
-                </div>
               </div>
             ))}
           </div>

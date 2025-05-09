@@ -32,13 +32,13 @@ const HomePage: React.FC = () => {
     {
       id: 1,
       name: 'Enes Alan',
-      title: 'Senior Partner',
+      title: 'Lawyer',
       image: '', // Empty image URL
     },
     {
       id: 2,
       name: 'Esin Akçay Alan',
-      title: 'Partner',
+      title: 'Lawyer',
       image: '', // Empty image URL
     }
   ];
