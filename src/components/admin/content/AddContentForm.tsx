@@ -18,20 +18,18 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Plus } from 'lucide-react';
+import { useContent } from '@/context/ContentContext';
 
 interface AddContentFormProps {
-  sections: string[];
-  languages: string[];
-  onAddContent: (section: string, key: string, values: Record<string, string>) => Promise<void>;
   saving: boolean;
 }
 
 const AddContentForm: React.FC<AddContentFormProps> = ({
-  sections,
-  languages,
-  onAddContent,
   saving
 }) => {
+  const { sections, handleAddNewContent } = useContent();
+  const languages = ['en', 'tr'];
+  
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [newContentKey, setNewContentKey] = useState('');
   const [newContentValues, setNewContentValues] = useState<Record<string, string>>(
@@ -40,7 +38,7 @@ const AddContentForm: React.FC<AddContentFormProps> = ({
 
   const handleSubmit = async () => {
     if (activeSection) {
-      await onAddContent(
+      await handleAddNewContent(
         activeSection,
         newContentKey,
         newContentValues

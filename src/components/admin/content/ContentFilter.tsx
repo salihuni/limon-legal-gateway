@@ -1,8 +1,7 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { 
   Select,
   SelectContent,
@@ -10,44 +9,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Plus, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
+import SectionManager from './SectionManager';
+import { useContent } from '@/context/ContentContext';
 
 interface ContentFilterProps {
-  sections: string[];
-  languages: string[];
   selectedSection: string;
   selectedLanguage: string;
   onSectionChange: (section: string) => void;
   onLanguageChange: (language: string) => void;
-  onRefresh: () => void;
-  onAddSection?: (section: string) => void;
 }
 
 const ContentFilter: React.FC<ContentFilterProps> = ({
-  sections,
-  languages,
   selectedSection,
   selectedLanguage,
   onSectionChange,
   onLanguageChange,
-  onRefresh,
-  onAddSection
 }) => {
-  const [newSection, setNewSection] = useState('');
-  const [showAddSection, setShowAddSection] = useState(false);
-  
-  const handleAddSection = () => {
-    if (newSection && onAddSection) {
-      onAddSection(newSection.toLowerCase().replace(/\s+/g, '_'));
-      setNewSection('');
-      setShowAddSection(false);
-    }
-  };
+  const { sections, fetchContent, handleAddSection } = useContent();
+  const languages = ['en', 'tr'];
 
   return (
     <div className="bg-muted/20 p-4 rounded-lg border mb-6">
@@ -71,35 +51,10 @@ const ContentFilter: React.FC<ContentFilterProps> = ({
               </SelectContent>
             </Select>
             
-            {onAddSection && (
-              <Popover open={showAddSection} onOpenChange={setShowAddSection}>
-                <PopoverTrigger asChild>
-                  <Button size="icon" variant="outline">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80">
-                  <div className="space-y-4">
-                    <h4 className="font-medium">Add New Section</h4>
-                    <div className="flex gap-2">
-                      <Input
-                        value={newSection}
-                        onChange={(e) => setNewSection(e.target.value)}
-                        placeholder="e.g. pricing, testimonials"
-                      />
-                      <Button 
-                        onClick={handleAddSection}
-                        disabled={!newSection}
-                        size="sm"
-                      >
-                        Add
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">Section names should be lowercase with underscores for spaces.</p>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            )}
+            <SectionManager
+              sections={sections}
+              onAddSection={handleAddSection}
+            />
           </div>
         </div>
         
@@ -124,7 +79,7 @@ const ContentFilter: React.FC<ContentFilterProps> = ({
 
         <div className="ml-auto">
           <Button 
-            onClick={onRefresh}
+            onClick={fetchContent}
             variant="outline"
             className="flex items-center gap-2"
           >
