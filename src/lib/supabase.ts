@@ -18,8 +18,8 @@ export interface Appointment {
   phone: string;
   date: string;
   service: string;
-  notes?: string;
-  status?: 'pending' | 'confirmed' | 'cancelled';
+  notes?: string | null;
+  status?: 'pending' | 'confirmed' | 'cancelled' | string;
   created_at?: string;
 }
 

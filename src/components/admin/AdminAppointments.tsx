@@ -28,7 +28,9 @@ const AdminAppointments: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setAppointments(data || []);
+      
+      // Cast the data to the correct Appointment type
+      setAppointments(data as Appointment[] || []);
     } catch (error) {
       console.error('Error fetching appointments:', error);
       toast({
